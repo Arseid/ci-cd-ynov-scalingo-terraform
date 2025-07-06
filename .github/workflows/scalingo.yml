@@ -7,8 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
+  terraform_apply:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout code
+       uses: actions/checkout@v3
+
+     - name: Setup Terraform
+       uses: hashicorp/setup-terraform@v2
+
+     - name: Terraform Init
+       run: |
+         cd scalingo
+         terraform init
+         terraform apply -auto-approve -var="scalingo_token=${{ secrets.SCALINGO_TOKEN }}"
+       env:
+         SCALINGO_TOKEN: ${{ secrets.SCALINGO_TOKEN }}
+
   deploy_app:
     runs-on: ubuntu-latest
+    needs: terraform_apply
     steps:
 
       - name: Checkout code
