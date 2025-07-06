@@ -58,11 +58,18 @@ jobs:
           cp -r repo2/server app/api-node
           cp -r repo2/mongo-seed app/mongo-seed
           
-          cp scalingo/Procfile app/
-          cp scalingo/.buildpacks app/
-          
+          cp scalingo/Procfile app/Procfile
+          cp scalingo/.buildpacks app/.buildpacks
+          echo "3.9" > app/.python-version
           tar -czvf app.tar.gz --exclude='.git' -C app .
           ls -la
+
+      - name: Debug archive contents
+        run: |
+          mkdir extract && tar -xvzf app.tar.gz -C extract
+          echo "::group::Contenu de l'archive"
+          find extract
+          echo "::endgroup::"          
 
       - name: Install Scalingo CLI
         uses: scalingo-community/setup-scalingo@v0.1.1
