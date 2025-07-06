@@ -58,8 +58,8 @@ jobs:
           cp -r repo2/server app/api-node
           cp -r repo2/mongo-seed app/mongo-seed
           
-          cp scalingo/Procfile app/Procfile
-          cp scalingo/.buildpacks app/.buildpacks
+          cp scalingo/Procfile app/
+          cp scalingo/.buildpacks app/
           
           tar -czvf app.tar.gz --exclude='.git' -C app .
           ls -la
