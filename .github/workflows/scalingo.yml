@@ -1,0 +1,58 @@
+name: Deploy Microservices to Scalingo
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy_app:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout Front + API Python
+        uses: actions/checkout@v4
+        with:
+          repository: Arseid/ci-cd-ynov
+          path: repo1
+
+      - name: Checkout API Node
+        uses: actions/checkout@v4
+        with:
+          repository: Arseid/ci-cd-ynov-back
+          path: repo2
+
+      - name: Créer l'archive
+        run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+          mkdir -p app
+          
+          cp -r repo1 app/front
+          rm -rf app/front/server app/front/sqlfiles
+          
+          cp -r repo1/server app/api-python
+          cp -r repo1/sqlfiles app/sqlfiles
+          
+          cp -r repo2/server app/api-node
+          cp -r repo2/mongo-seed app/mongo-seed
+          
+          cp scalingo/Procfile app/Procfile
+          cp scalingo/.buildpacks app/.buildpacks
+          
+          tar -czvf app.tar.gz --exclude='.git' -C app .
+          ls -la
+
+      - name: Install Scalingo CLI
+        uses: scalingo-community/setup-scalingo@v0.1.1
+        with:
+          region: 'osc-fr1'
+          api_token: ${{ secrets.SCALINGO_TOKEN }}
+
+      - name: Déploiement sur Scalingo
+        run: scalingo --app loisefenoll-test-01 deploy monoapp.tar.gz
+        env:
+          SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_TOKEN }}
