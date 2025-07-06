@@ -1,3 +1,0 @@
-web: cd front && npm start
-api-node: cd api-node && node ./server.js
-api-python: cd api-python && python ./server.py
