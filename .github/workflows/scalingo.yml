@@ -60,11 +60,10 @@ jobs:
           
           cp scalingo/Procfile app/Procfile
           cp scalingo/.buildpacks app/.buildpacks
+          
           echo "3.9" > app/.python-version
-          cd app
-          tar -czvf ../app.tar.gz --exclude='.git' .
-          cd ..
-          ls -la
+          
+          tar -czvf ../app.tar.gz --exclude='.git' -C app .
 
       - name: Debug archive contents
         run: |
