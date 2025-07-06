@@ -29,7 +29,7 @@ resource "scalingo_addon" "mysql" {
 
 resource "scalingo_addon" "mongodb" {
   provider_id = "mongodb"
-  plan        = "mongodb-starter-512"
+  plan        = "mongo-starter-512"
   app         = scalingo_app.ci_cd_app.id
 }
 
