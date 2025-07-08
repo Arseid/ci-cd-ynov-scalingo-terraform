@@ -1,11 +1,10 @@
 name: Deploy Microservices to Scalingo
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [trigger-terraform]
   workflow_dispatch:
-
+  
 jobs:
   terraform_apply:
     runs-on: ubuntu-latest
